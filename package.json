@@ -1,0 +1,14 @@
+{
+  "name": "patch-jest-jasmine2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "mv node_modules/jest-jasmine2 jest-jasmine2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest-jasmine2": "^29.2.1"
+  }
+}
