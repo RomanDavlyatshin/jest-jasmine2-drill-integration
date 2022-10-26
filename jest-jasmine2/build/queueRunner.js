@@ -19,7 +19,7 @@ function queueRunner(options) {
     onCancel(resolve);
   });
   const mapper = ({fn, timeout, initError = new Error()}) => {
-    let promise = new Promise(resolve => {
+    let promise = new Promise(async resolve => {
       const next = function (...args) {
         const err = args[0];
         if (err) {
@@ -32,7 +32,7 @@ function queueRunner(options) {
         resolve();
       };
       try {
-        fn.call(options.userContext, next);
+        await fn.call(options.userContext, next);
       } catch (e) {
         options.onException(e);
         resolve();

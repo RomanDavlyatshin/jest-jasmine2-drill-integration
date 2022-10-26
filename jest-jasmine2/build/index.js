@@ -78,6 +78,10 @@ async function jasmine2(globalConfig, config, environment, runtime, testPath) {
   Object.assign(environment.global, jasmineInterface);
   env.addReporter(jasmineInterface.jsApiReporter);
 
+  if (global.Drill) {
+    env.addReporter(global.Drill.getJasmineReporter())
+  }
+
   // TODO: Remove config option if V8 exposes some way of getting location of caller
   // in a future version
   if (config.testLocationInResults === true) {

@@ -140,17 +140,17 @@ class Spec {
       }
     }
   }
-  execute(onComplete, enabled) {
+  async execute(onComplete, enabled) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
-    this.onStart(this);
+    await this.onStart(this)
     if (
       !this.isExecutable() ||
       this.markedPending ||
       this.markedTodo ||
       enabled === false
     ) {
-      complete(enabled);
+      await complete(enabled);
       return;
     }
     const fns = this.beforeAndAfterFns();
@@ -166,10 +166,11 @@ class Spec {
       clearTimeout,
       fail: () => {}
     });
-    this.currentRun.then(() => complete(true));
-    function complete(enabledAgain) {
+    await this.currentRun;
+    await complete(true);
+    async function complete(enabledAgain) {
       self.result.status = self.status(enabledAgain);
-      self.resultCallback(self.result);
+      await self.resultCallback(self.result);
       if (onComplete) {
         onComplete();
       }

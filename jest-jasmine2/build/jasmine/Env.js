@@ -233,31 +233,31 @@ function jasmineEnv(j$) {
         }
         const lastDeclarationSuite = currentDeclarationSuite;
         await (0, _treeProcessor.default)({
-          nodeComplete(suite) {
+          async nodeComplete(suite) {
             if (!suite.disabled) {
               clearResourcesForRunnable(suite.id);
             }
             currentlyExecutingSuites.pop();
             if (suite === topSuite) {
-              reporter.jasmineDone({
+              await reporter.jasmineDone({
                 failedExpectations: topSuite.result.failedExpectations
               });
             } else {
-              reporter.suiteDone(suite.getResult());
+              await reporter.suiteDone(suite.getResult());
             }
           },
-          nodeStart(suite) {
+          async nodeStart(suite) {
             currentlyExecutingSuites.push(suite);
             defaultResourcesForRunnable(
               suite.id,
               suite.parentSuite && suite.parentSuite.id
             );
             if (suite === topSuite) {
-              reporter.jasmineStarted({
+              await reporter.jasmineStarted({
                 totalSpecsDefined
               });
             } else {
-              reporter.suiteStarted(suite.result);
+              await reporter.suiteStarted(suite.result);
             }
           },
           queueRunnerFactory,
@@ -423,15 +423,15 @@ function jasmineEnv(j$) {
           spec.disable();
         }
         return spec;
-        function specResultCallback(result) {
+        async function specResultCallback(result) {
           clearResourcesForRunnable(spec.id);
           currentSpec = null;
-          reporter.specDone(result);
+          await reporter.specDone(result);
         }
-        function specStarted(spec) {
+        async function specStarted(spec) {
           currentSpec = spec;
           defaultResourcesForRunnable(spec.id, suite.id);
-          reporter.specStarted(spec.result);
+          await reporter.specStarted(spec.result);
         }
       };
       this.it = function (description, fn, timeout) {

@@ -54,17 +54,17 @@ const patchJasmine = () => {
     class Spec extends realSpec {
       constructor(attr) {
         const resultCallback = attr.resultCallback;
-        attr.resultCallback = function (result) {
+        attr.resultCallback = async function (result) {
           addSuppressedErrors(result);
           addAssertionErrors(result);
-          resultCallback.call(attr, result);
+          await resultCallback.call(attr, result);
         };
         const onStart = attr.onStart;
-        attr.onStart = context => {
+        attr.onStart = async context => {
           _expect.jestExpect.setState({
             currentTestName: context.getFullName()
           });
-          onStart && onStart.call(attr, context);
+          onStart && await onStart.call(attr, context);
         };
         super(attr);
       }

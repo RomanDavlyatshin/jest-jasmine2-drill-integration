@@ -59,8 +59,8 @@ class ReportDispatcher {
     for (let i = 0; i < dispatchedMethods.length; i++) {
       const method = dispatchedMethods[i];
       this[method] = (function (m) {
-        return function () {
-          dispatch(m, arguments);
+        return async function () {
+          await dispatch(m, arguments);
         };
       })(method);
     }
@@ -76,7 +76,7 @@ class ReportDispatcher {
       reporters = [];
     };
     return this;
-    function dispatch(method, args) {
+    async function dispatch(method, args) {
       if (reporters.length === 0 && fallbackReporter !== null) {
         reporters.push(fallbackReporter);
       }
@@ -84,7 +84,7 @@ class ReportDispatcher {
         const reporter = reporters[i];
         if (reporter[method]) {
           // @ts-expect-error: wrong context
-          reporter[method].apply(reporter, args);
+          await reporter[method].apply(reporter, args);
         }
       }
     }

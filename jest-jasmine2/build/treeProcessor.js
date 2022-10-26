@@ -26,19 +26,19 @@ function treeProcessor(options) {
       : getNodeWithoutChildrenHandler(node, enabled);
   }
   function getNodeWithoutChildrenHandler(node, enabled) {
-    return function fn(done = noop) {
-      node.execute(done, enabled);
+    return async function fn(done = noop) {
+      await node.execute(done, enabled);
     };
   }
   function getNodeWithChildrenHandler(node, enabled) {
     return async function fn(done = noop) {
-      nodeStart(node);
+      await nodeStart(node);
       await queueRunnerFactory({
         onException: error => node.onException(error),
         queueableFns: wrapChildren(node, enabled),
         userContext: node.sharedUserContext()
       });
-      nodeComplete(node);
+      await nodeComplete(node);
       done();
     };
   }
